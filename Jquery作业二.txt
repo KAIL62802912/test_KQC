@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <script src="jquery-1.8.3.js"></script>
+    <script>
+$(function()
+{
+    var index;//记录点击下面导航的索引
+    var imgindex=0;//记录当前显示大图的索引
+    var i;//计数器
+    var a;//记录向左或向右滑动几次
+
+
+    $("span").click(function () //点击下面导航
+    {
+        index=$(this).index();
+        if(index>imgindex)//判断向左还是向右
+        {
+             a=index-imgindex;
+                 for (i=0;a>i;i++)
+                 {
+                 right();//根据计数器滑动
+                 }
+        }else
+        {
+            a=imgindex-index;
+            for(i=0;a>i;i++)
+            {
+               left();
+            }
+        }
+    });
+
+
+    setInterval(right,5000);//循环任务
+
+
+    $("div").eq(0).hover(function () //显示隐藏两侧向左向右导航
+    {
+        $("#left").css('display','block');
+        $("#right").css('display','block');
+    },function ()
+    {
+        $("#left").css('display','none');
+        $("#right").css('display','none');
+    })
+
+
+
+    $("#left").click(function () //向左滑动
+    {
+
+           left();
+    });
+    $("#right").click(function () //向右滑动
+    {
+           right();
+    });
+
+
+function  left() {//向左滑动具体方法
+    $("li:first").before($("li:last"));
+    $("#ul0").css("left","-1000px");
+    imgindex-=1;//每滑动一次索引变化
+    if (imgindex<0)imgindex=3;//由索引第0张到第3张图索引变化
+    $("span").css('background-color','#FFFFFF');
+    $("span").eq(imgindex).css('background-color','#32BEFF');
+    $("#ul0 ").animate({left:"0px"},200);
+
+    }
+
+
+    function  right() {//向右滑动具体方法
+        imgindex+=1;
+        if (imgindex>3)imgindex=0;
+        $("span").css('background-color','#FFFFFF');
+        $("span").eq(imgindex).css('background-color','#32BEFF');
+        $("#ul0 ").animate({left:"-1000px"},200,function () {
+            $("li:last").after($("li:first"));
+            $("ul").css("left","0px");
+
+        });
+
+    }
+
+
+
+});
+</script>
+<style>
+    .div1{width:1000px;height:;overflow:hidden;float:left;position:relative;left:10%}
+    .div1 ul{float:left;margin:0px;padding:0px;width:4500px;position:relative;}
+    .div1 ul li{float:left;list-style:none;margin:0px;padding:0px;}
+    .div1 ul li img{width:1000px;border:1px solid #aaa;padding:2px;}
+    .div2{width: 500px;z-index:9999;position: relative;left:40%;top:-42px}
+    span{display:inline-block;width: 40px;height:3px;background-color:#FFFFFF;cursor: pointer}
+    #right{background:url(4.png) no-repeat left 0;height:90px;width:50px;right:1%;top:50%;margin-top:-45px;position:absolute;z-index: 9999;display: none}
+    #left{background:url(4.png) no-repeat left -90px;height:90px;width:50px;left:1%;top:50%;margin-top:-45px;position:absolute;z-index: 9999;display: none}
+</style>
+</head>
+
+<body>
+
+<div class="div1">
+    <ul id="ul0">
+        <li><img src="0.jpg" id="a" /></li>
+        <li><img src="1.jpg" id="b" /></li>
+        <li><img src="2.jpg" id="c" /></li>
+        <li><img src="3.jpg" id="d" /></li>
+    </ul>
+    <div id="left">
+
+    </div>
+    <div id="right">
+
+    </div>
+
+
+
+
+<div class="div2">
+    <ul>
+        <span style="background-color: #32BEFF"></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </ul>
+</div>
+</div>
+</body>
+</html>
