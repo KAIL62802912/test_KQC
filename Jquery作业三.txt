@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>无标题文档</title>
+  <style>
+
+
+  </style>
+
+  <script src="jquery-1.8.3.js" ></script>
+  <script>
+      $(function(){
+
+          var json=[{id:1,name:"a",//一代
+              child:[    {id:"1-1",name:"a-1",//二代
+                             child:[{id:"1-1-1",name:"a-1-1"},//三代
+                                    {id:"1-1-2",name:"a-1-2"}]},//三代
+                         {id:"1-2",name:"a-2"}]},//二代
+                    {id:2,name:"b"},//一代
+                    {id:3,name:"c"}];//一代
+
+
+   digui(json);
+
+
+          function digui(object,fatherid) {
+              var a="father"
+              if(fatherid!=null) a=fatherid;//判定传进来的是一代还是其子代
+
+             $.each(object,function (index,childobject) {
+                  //一代的话在 总DIVfather上添加，子代在其父代上添加
+                 $("#"+a).append( '<ul id="'+childobject.id+'"><input type="checkbox" value="">'+childobject.name+'</ul>');
+
+
+                 if(childobject.child!=undefined)//递归遍历JSON添加
+                 {
+                     digui(childobject.child,childobject.id);
+                 }
+
+             });
+
+         }
+
+          $("input").click(function () {
+
+                  if($(this).attr("checked"))//判定checkbox状态
+                  { $(this).parent().children("ul").find("input").attr("checked",true);//选中的话将其改为选中状态
+                 $(this).parent().parents("ul").children("[type=checkbox]").attr("checked",true);//将其子代改为选中状态
+                     }
+              else
+                  {$(this).parent().children("ul").find("input").attr("checked",false);//将其子代全部改为非选中
+                     changed($(this).parent().attr("id")) ;//往上判定自己兄弟情况，决定是否要改变父类状态
+                  }
+              }
+          );
+
+                    function changed(ul_id) {
+
+                        var level=(ul_id.split("-")).length;
+                        for(var i=0;i<level;i++)
+                        {   if($("#"+ul_id).parent("ul").find(":checked").size()==1){//判定父类子代中只有父类选中则取消选中
+                            $("#"+ul_id).parent().children().first().attr("checked",false);
+                            ul_id=$("#"+ul_id).parent().attr("id");}
+                        }
+
+
+
+                  }
+
+
+
+      });
+
+  </script>
+</head>
+
+<body>
+
+<div id="father">
+第三次作业
+</div>
+
+
+</body>
+</html>
